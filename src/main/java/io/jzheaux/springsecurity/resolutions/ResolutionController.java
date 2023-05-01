@@ -31,7 +31,7 @@ public class ResolutionController {
 	public Optional<Resolution> read(@PathVariable("id") UUID id) {
 		return this.resolutions.findById(id);
 	}
-
+	// modif securit context
 	@PostMapping("/resolution")
 	public Resolution make(@CurrentSecurityContext(expression="authentication.name") String owner, @RequestBody String text) {
 		Resolution resolution = new Resolution(text, owner);

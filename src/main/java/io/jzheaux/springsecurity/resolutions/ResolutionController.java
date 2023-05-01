@@ -33,7 +33,7 @@ public class ResolutionController {
 
 	@GetMapping("/resolution/{id}")
 	@PreAuthorize("hasAuthority('resolution:read')")
-	@PostAuthorize("returnObject.orElse(null)?.owner == authentication.name || hasRole('ADMIN')")
+	@PostAuthorize("@post.authorize(#root)")
 	public Optional<Resolution> read(@PathVariable("id") UUID id) {
 		return this.resolutions.findById(id);
 	}
@@ -47,7 +47,7 @@ public class ResolutionController {
 
 	@PutMapping(path="/resolution/{id}/revise")
 	@PreAuthorize("hasAuthority('resolution:write')")
-	@PostAuthorize("returnObject.orElse(null)?.owner == authentication.name")
+	@PostAuthorize("@post.authorize(#root)")
 	@Transactional
 	public Optional<Resolution> revise(@PathVariable("id") UUID id, @RequestBody String text) {
 		this.resolutions.revise(id, text);

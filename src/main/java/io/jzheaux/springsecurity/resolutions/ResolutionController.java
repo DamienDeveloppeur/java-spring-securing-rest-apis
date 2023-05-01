@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 @PostFilter("@post.filter(#root)")
-@CrossOrigin(allowCredentials = "true")
 @RestController
 public class ResolutionController {
 	private final ResolutionRepository resolutions;
@@ -19,7 +18,7 @@ public class ResolutionController {
 	public ResolutionController(ResolutionRepository resolutions) {
 		this.resolutions = resolutions;
 	}
-	@CrossOrigin //(maxAge = 0) if locally verifying
+	@CrossOrigin(allowCredentials = "true") //(maxAge = 0) if locally verifying
 	@GetMapping("/resolutions")
 	@PreAuthorize("hasAuthority('resolution:read')")
 	public Iterable<Resolution> read() {

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 public class ResolutionInitializer implements SmartInitializingSingleton {
 	private final ResolutionRepository resolutions;
 	private final String PASSWORD = "{bcrypt}$2a$10$MywQEqdZFNIYnx.Ro/VQ0ulanQAl34B5xVjK2I/SDZNVGS5tHQ08W";
-
 	private final UserRepository users;
 
 	public ResolutionInitializer(ResolutionRepository resolutions, UserRepository users) {
@@ -33,7 +32,11 @@ public class ResolutionInitializer implements SmartInitializingSingleton {
 		haswrite.grantAuthority("resolution:write");
 		this.users.save(haswrite);
 
-
+		User admin = new User("admin",PASSWORD);
+		admin.grantAuthority("ROLE_ADMIN");
+		admin.grantAuthority("resolution:read");
+		admin.grantAuthority("resolution:write");
+		this.users.save(admin);
 
 
 	}

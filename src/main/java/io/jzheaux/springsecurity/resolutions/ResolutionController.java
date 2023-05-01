@@ -1,5 +1,7 @@
 package io.jzheaux.springsecurity.resolutions;
 
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+@PostFilter("@post.filter(#root)")
 @RestController
 public class ResolutionController {
 	private final ResolutionRepository resolutions;
@@ -31,6 +33,7 @@ public class ResolutionController {
 
 	@GetMapping("/resolution/{id}")
 	@PreAuthorize("hasAuthority('resolution:read')")
+	@PostAuthorize("returnObject.orElse(null)?.owner == authentication.name || hasRole('ADMIN')")
 	public Optional<Resolution> read(@PathVariable("id") UUID id) {
 		return this.resolutions.findById(id);
 	}
@@ -44,6 +47,7 @@ public class ResolutionController {
 
 	@PutMapping(path="/resolution/{id}/revise")
 	@PreAuthorize("hasAuthority('resolution:write')")
+	@PostAuthorize("returnObject.orElse(null)?.owner == authentication.name")
 	@Transactional
 	public Optional<Resolution> revise(@PathVariable("id") UUID id, @RequestBody String text) {
 		this.resolutions.revise(id, text);
